@@ -32,8 +32,8 @@
 （`--ignore-missing` は、手元に無い `.img` の行を飛ばすためです。）この版の値は次のとおりです。
 
 ```
-c8bddd6a5549a194c82eae7a1458981cf7b5692f2cf8af5660667bcff986dca5  pomera-dm250-trixie-2026.11.23.img.xz
-04156aef0269b60a4adb853e8f8682423f921ed85f3439fe5dc651063c994ee8  pomera-dm250-trixie-2026.11.23.img
+2610809e0e5009fb5b1c04ad75860a5177c337bfe66924cf7bf21cf26de06f19  pomera-dm250-trixie-2026.11.23.img.xz
+e1693c0cb13e6f05eeb41145c5d63e179d70d5328d497189b0b6894df3a07ff3  pomera-dm250-trixie-2026.11.23.img
 ```
 
 ## SD カードへの焼き方
