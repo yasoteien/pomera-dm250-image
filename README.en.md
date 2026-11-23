@@ -124,9 +124,11 @@ sudo apt update && sudo apt full-upgrade
 - The image contains one binary whose source is not published (`fdtp-dict` of FDTP, which reads the built-in dictionary); see NOTICE.md.
 - Keep a backup of important documents outside the SD card.
 
-## Moving from another image
+## If you are starting out, or using another image
 
-No migration steps are given here. As a reference, see this (Japanese) article about moving a Debian 11 setup to Debian 13 while keeping as much as possible:
+- **If you are starting out, start from this image.** This image is the only setup that is tested.
+- If you use ichinomoto's image with pomera-kernel or FDTP installed via apt, apt updates keep arriving as before, but that combination is not tested. Moving to this image is recommended (back up your files in your home directory first).
+- No migration steps are given here. As a reference, see this (Japanese) article about moving a Debian 11 setup to Debian 13 while keeping as much as possible:
 
 - https://note.com/yasoteien/n/n2ea462876585
 
