@@ -2,12 +2,12 @@
 
 キングジムのポメラ DM250（日本版）で Debian 13（trixie）を動かすための SD カードのイメージです。SD カードに焼いて挿し、電源を入れれば起動します。
 
-- 中身: Debian 13（trixie、armhf）、自前で組んだ Linux カーネル 6.18.64（Linux 6.18 LTS ＋ DM250 用のパッチ）と U-Boot、日本語の表示と入力（ja_JP.UTF-8・日本語のフォント・Mozc・DM250 の JIS 配列）、XFCE、FDTP 1.18（文章を書くための道具。おすすめの設定を当てた状態）。
+- 中身: Debian 13（trixie、armhf）、自前で組んだ Linux カーネル 6.18.65（Linux 6.18 LTS ＋ DM250 用のパッチ）と U-Boot、日本語の表示と入力（ja_JP.UTF-8・日本語のフォント・Mozc・DM250 の JIS 配列）、XFCE、FDTP 1.18（文章を書くための道具。おすすめの設定を当てた状態）。
 - 対象は **DM250 の日本版だけ**です。US 版（DM250US）・DM200 では使わないでください。
 - 本体の内蔵メモリ（eMMC）には書きません。SD カードを抜けば、本体の純正のソフトで起動します。
 - 試験版です。下の「免責」を読んでから使ってください。
 
-版: 2026.11.23（Release: https://github.com/yasoteien/pomera-dm250-image/releases/tag/v2026.11.23 ）
+版: 2026.11.28（Release: https://github.com/yasoteien/pomera-dm250-image/releases/tag/v2026.11.28 ）
 
 ## 免責
 
@@ -19,21 +19,21 @@
 
 - **8GB 以上の microSD カード**（4GB のカードには焼けません）。焼くとカードの中身はすべて消えます。
 - SD カードを読み書きできる PC（Windows・Mac・Linux のどれか）。
-- Release の `pomera-dm250-trixie-2026.11.23.img.xz` と `SHA256SUMS`。
+- Release の `pomera-dm250-trixie-2026.11.28.img.xz` と `SHA256SUMS`。
 
 ## 落とした物を確かめる（sha256）
 
 `SHA256SUMS` には、`.img.xz`（落とす物）と、それを解いた `.img` の 2 行があります。落とした `.img.xz` の値が、`SHA256SUMS` の `.img.xz` の行と同じ事を確かめてください。
 
-- Windows（PowerShell）: `Get-FileHash .\pomera-dm250-trixie-2026.11.23.img.xz -Algorithm SHA256`
+- Windows（PowerShell）: `Get-FileHash .\pomera-dm250-trixie-2026.11.28.img.xz -Algorithm SHA256`
 - Mac: `shasum -a 256 -c --ignore-missing SHA256SUMS`
 - Linux: `sha256sum -c --ignore-missing SHA256SUMS`
 
 （`--ignore-missing` は、手元に無い `.img` の行を飛ばすためです。）この版の値は次のとおりです。
 
 ```
-2610809e0e5009fb5b1c04ad75860a5177c337bfe66924cf7bf21cf26de06f19  pomera-dm250-trixie-2026.11.23.img.xz
-e1693c0cb13e6f05eeb41145c5d63e179d70d5328d497189b0b6894df3a07ff3  pomera-dm250-trixie-2026.11.23.img
+c7cfb85764deeecfae43c2039757dc76e56dde5256812e8767884fd3ec4ef584  pomera-dm250-trixie-2026.11.28.img.xz
+9a3e41db4d5ebce94af654052b2e1f955d1ee74d1c3a9cdf762226e35a27ee45  pomera-dm250-trixie-2026.11.28.img
 ```
 
 ## SD カードへの焼き方
@@ -44,7 +44,7 @@ Raspberry Pi Imager（https://www.raspberrypi.com/software/ ）は `.img.xz` を
 
 1. Raspberry Pi Imager を入れて開く。
 2. 「デバイス」は選ばなくてかまいません（「No filtering」等でよい）。
-3. 「OS を選ぶ」の一覧のいちばん下の **「カスタムを使う」（Use custom）** を選び、落とした `pomera-dm250-trixie-2026.11.23.img.xz` を選ぶ。
+3. 「OS を選ぶ」の一覧のいちばん下の **「カスタムを使う」（Use custom）** を選び、落とした `pomera-dm250-trixie-2026.11.28.img.xz` を選ぶ。
 4. 「ストレージを選ぶ」で、焼く SD カードを選ぶ。**大きさと名前を見て、ほかのディスクを選んでいない事を確かめてください。**
 5. 「OS のカスタマイズ（設定を編集する）」を聞かれたら **「いいえ」** を選ぶ（このイメージは最初の起動で名前やパスワードを聞くので、Imager の設定は使いません）。
 6. 書き込みと確かめ（ベリファイ）が終わったら、SD カードを取り出す。
@@ -53,7 +53,7 @@ Raspberry Pi Imager（https://www.raspberrypi.com/software/ ）は `.img.xz` を
 
 ```
 lsblk                          # SD カードの名前（例: /dev/sdX）を、大きさで確かめる
-xz -dc pomera-dm250-trixie-2026.11.23.img.xz | sudo dd of=/dev/sdX bs=4M conv=fsync status=progress
+xz -dc pomera-dm250-trixie-2026.11.28.img.xz | sudo dd of=/dev/sdX bs=4M conv=fsync status=progress
 ```
 
 ### Mac で dd を使う方法
@@ -63,7 +63,7 @@ xz -dc pomera-dm250-trixie-2026.11.23.img.xz | sudo dd of=/dev/sdX bs=4M conv=fs
 ```
 diskutil list                  # SD カードの名前（例: /dev/diskN）を、大きさで確かめる
 diskutil unmountDisk /dev/diskN
-xz -dc pomera-dm250-trixie-2026.11.23.img.xz | sudo dd of=/dev/rdiskN bs=4m conv=fsync
+xz -dc pomera-dm250-trixie-2026.11.28.img.xz | sudo dd of=/dev/rdiskN bs=4m conv=fsync
 diskutil eject /dev/diskN
 ```
 
@@ -73,7 +73,7 @@ diskutil eject /dev/diskN
 
 SD カードを DM250 に挿し、電源を入れます。
 
-1. 自前の U-Boot で起動し、最初の起動では **SD カードの残りいっぱいまで `/` が広がり、末尾に swap（1GiB）ができます**（hibernate に使います）。数十秒かかる事があります。
+1. 自前の U-Boot で起動し、最初の起動では **SD カードの残りいっぱいまで `/` が広がり、末尾に swap（1GiB）ができます**（hibernate の写しの置き場。普段は使いません。普段の swap はメモリを圧縮する zram 384MB です）。数十秒かかる事があります。
 2. 日本語の画面で次を聞かれます。
    - 利用者の名前とパスワード（**イメージに共通のパスワードはありません**。ここで決めた物だけが使えます）
    - Wi-Fi につなぐか（つなぐ時は nmtui の画面が出ます。下の「既知の事」）
@@ -116,6 +116,7 @@ sudo apt update && sudo apt full-upgrade
 - **Wi-Fi は nmtui で設定します。** 項目の移動は **Tab キーと矢印キー**、決定は Enter です（画面にキーの説明は出ません）。あとから設定し直す時も `nmtui` を打ちます。
 - **DM250 の Wi-Fi は 2.4GHz だけです。** 5GHz のアクセスポイントは一覧に出ません。
 - Bluetooth は最初から電源が入っています。
+- **ブラウザは NetSurf（軽いブラウザ）が入っています。** Firefox は入れていません。`sudo apt install firefox-esr` で入れると 1〜2 ページなら開けますが重く（1 ページを開くのに約 50 秒、3 ページで約 610MB）、メモリ（1GB）が足りなくなりがちです。
 - SD カードの中身と hibernate の写し（swap）は暗号化していません。SD カードをなくした時は、中の文書が読まれうると考えてください。
 - 利用者は `input` の組に入っています（FDTP がキーを直接読むため）。同じ利用者で動くほかのプログラムも、キー入力を読める事になります。
 - FDTP の LocalSend のブラウザでの受け取りは暗号化されていません（同じ Wi-Fi の中で使ってください）。

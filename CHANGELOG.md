@@ -4,6 +4,36 @@
 
 **試験版です。無保証で、使うのは自己責任です。** キングジム、および ichinomoto 氏が ekesete.net で公開されている DM250 用 Debian 13 イメージとは関係のない、非公式の物です（README の「免責」）。
 
+## [2026.11.28] - 2026-11-28
+
+**お詫びと修正の版です。** 2026.11.23 の版には、次の不具合がありました。ご迷惑をおかけし、申し訳ありません。
+
+### 直した事
+
+- **XFCE が起動しませんでした。** `startx` が「Cannot run in framebuffer mode」で止まっていました。DM250 には画面用（rockchip-drm）と GPU 用（lima）の 2 つの DRM があり、X の設定で画面の方を指していなかったためです。`/etc/X11/xorg.conf.d/20-pomera-modesetting.conf` に `Option "kmsdev" "/dev/dri/card0"` を足しました。
+- **XFCE でのログインの知らせの窓が文字化けしていました。** 窓（xmessage）は日本語を表示できないため、英語で出すようにしました（端末での知らせは今までどおり日本語）。
+- ログインのたびに journal に出ていた fluidsynth の起動の失敗を止めました（`fluidsynth.service` の利用者単位を mask。音には関係しません）。
+
+### 変えた事
+
+- **普段の swap を、SD カードからメモリを圧縮する zram（384MB、lzo-rle）に変えました。** SD カードへの swap は極端に遅く、メモリが足りなくなると本体が固まる事がありました。zram では、メモリが足りなくなっても動きが大きくは落ちません。それでも足りない時は、固まる代わりにアプリが閉じられます。
+- SD カードの末尾の swap（1GiB）は、hibernate の写しを書く時だけ使うようにしました（普段は使いません）。
+- カーネルを 6.18.65（pomera-kernel 2026.11.24.1）にしました。
+
+### 2026.11.23 の版を使っている方へ
+
+- 焼き直さなくても、X だけなら次の 1 行で直ります（端末で流してから `startx`）:
+  `printf 'Section "Device"\n\tIdentifier "pomera-drm"\n\tDriver "modesetting"\n\tOption "kmsdev" "/dev/dri/card0"\nEndSection\n' | sudo tee /etc/X11/xorg.conf.d/20-pomera-modesetting.conf`
+- zram などほかの変更は、この版を焼き直すと入ります。
+
+### English
+
+- **Apology and fix release.** The 2026.11.23 image had bugs. We are sorry for the trouble.
+- Fixed: **XFCE did not start** (`startx` stopped with "Cannot run in framebuffer mode"). The X config now points at the display DRM device (`Option "kmsdev" "/dev/dri/card0"`). Users of 2026.11.23 can apply the same one-line fix shown above without rewriting the card.
+- Fixed: the login notice window in XFCE showed garbled text (xmessage cannot show Japanese); it is now in English. Stopped the failing per-user `fluidsynth.service` at login.
+- Changed: **the everyday swap is now a 384 MB compressed-memory zram (lzo-rle)** instead of the SD card, which was very slow and could freeze the machine under memory pressure. The 1 GiB swap at the end of the card is now used only for the hibernation image.
+- Kernel 6.18.65 (pomera-kernel 2026.11.24.1).
+
 ## [2026.11.23] - 2026-11-23
 
 最初の公開です。**8GB 以上の SD カードが必要です。** 焼き方・最初の起動・確かめ方は README を見てください。

@@ -4,12 +4,12 @@ An SD card image that runs Debian 13 (trixie) on the King Jim Pomera DM250 (Japa
 
 The Japanese README ([README.md](README.md)) is the authoritative version.
 
-- Contents: Debian 13 (trixie, armhf), a self-built Linux kernel 6.18.64 (Linux 6.18 LTS plus DM250 patches) and U-Boot, Japanese display and input (ja_JP.UTF-8, Japanese fonts, Mozc, the DM250 JIS keyboard layout), XFCE, and FDTP 1.18 (a writing tool, with the recommended settings applied).
+- Contents: Debian 13 (trixie, armhf), a self-built Linux kernel 6.18.65 (Linux 6.18 LTS plus DM250 patches) and U-Boot, Japanese display and input (ja_JP.UTF-8, Japanese fonts, Mozc, the DM250 JIS keyboard layout), XFCE, and FDTP 1.18 (a writing tool, with the recommended settings applied).
 - **For the Japanese DM250 only.** Do not use it on the DM250US or the DM200.
 - Nothing is written to the internal memory (eMMC). Remove the SD card and the DM250 boots its stock software.
 - This is a test release. Read the disclaimer below first.
 
-Version: 2026.11.23 (Release: https://github.com/yasoteien/pomera-dm250-image/releases/tag/v2026.11.23 )
+Version: 2026.11.28 (Release: https://github.com/yasoteien/pomera-dm250-image/releases/tag/v2026.11.28 )
 
 ## Disclaimer
 
@@ -21,21 +21,21 @@ Version: 2026.11.23 (Release: https://github.com/yasoteien/pomera-dm250-image/re
 
 - **A microSD card of 8 GB or larger** (a 4 GB card is too small). Writing the image erases the whole card.
 - A PC that can write SD cards (Windows, macOS, or Linux).
-- `pomera-dm250-trixie-2026.11.23.img.xz` and `SHA256SUMS` from the Release.
+- `pomera-dm250-trixie-2026.11.28.img.xz` and `SHA256SUMS` from the Release.
 
 ## Verify the download (sha256)
 
 `SHA256SUMS` has two lines: the `.img.xz` you download and the `.img` inside it. Make sure the hash of your `.img.xz` matches the `.img.xz` line.
 
-- Windows (PowerShell): `Get-FileHash .\pomera-dm250-trixie-2026.11.23.img.xz -Algorithm SHA256`
+- Windows (PowerShell): `Get-FileHash .\pomera-dm250-trixie-2026.11.28.img.xz -Algorithm SHA256`
 - macOS: `shasum -a 256 -c --ignore-missing SHA256SUMS`
 - Linux: `sha256sum -c --ignore-missing SHA256SUMS`
 
 (`--ignore-missing` skips the `.img` line, since you do not have that file.) The values for this version:
 
 ```
-2610809e0e5009fb5b1c04ad75860a5177c337bfe66924cf7bf21cf26de06f19  pomera-dm250-trixie-2026.11.23.img.xz
-e1693c0cb13e6f05eeb41145c5d63e179d70d5328d497189b0b6894df3a07ff3  pomera-dm250-trixie-2026.11.23.img
+c7cfb85764deeecfae43c2039757dc76e56dde5256812e8767884fd3ec4ef584  pomera-dm250-trixie-2026.11.28.img.xz
+9a3e41db4d5ebce94af654052b2e1f955d1ee74d1c3a9cdf762226e35a27ee45  pomera-dm250-trixie-2026.11.28.img
 ```
 
 ## Writing the SD card
@@ -46,7 +46,7 @@ Raspberry Pi Imager (https://www.raspberrypi.com/software/) writes the `.img.xz`
 
 1. Install and open Raspberry Pi Imager.
 2. You do not need to choose a device ("No filtering" is fine).
-3. Under "Choose OS", pick **"Use custom"** at the bottom of the list and select `pomera-dm250-trixie-2026.11.23.img.xz`.
+3. Under "Choose OS", pick **"Use custom"** at the bottom of the list and select `pomera-dm250-trixie-2026.11.28.img.xz`.
 4. Under "Choose storage", pick the SD card. **Check the size and name so that you do not pick another disk.**
 5. If asked about OS customisation, answer **"No"** (this image asks for a user name and password on its first boot).
 6. When writing and verifying are done, eject the card.
@@ -55,7 +55,7 @@ Raspberry Pi Imager (https://www.raspberrypi.com/software/) writes the `.img.xz`
 
 ```
 lsblk                          # find the SD card (e.g. /dev/sdX) by its size
-xz -dc pomera-dm250-trixie-2026.11.23.img.xz | sudo dd of=/dev/sdX bs=4M conv=fsync status=progress
+xz -dc pomera-dm250-trixie-2026.11.28.img.xz | sudo dd of=/dev/sdX bs=4M conv=fsync status=progress
 ```
 
 ### macOS with dd
@@ -65,7 +65,7 @@ Install `xz` with Homebrew or similar (`brew install xz`).
 ```
 diskutil list                  # find the SD card (e.g. /dev/diskN) by its size
 diskutil unmountDisk /dev/diskN
-xz -dc pomera-dm250-trixie-2026.11.23.img.xz | sudo dd of=/dev/rdiskN bs=4m conv=fsync
+xz -dc pomera-dm250-trixie-2026.11.28.img.xz | sudo dd of=/dev/rdiskN bs=4m conv=fsync
 diskutil eject /dev/diskN
 ```
 
@@ -75,7 +75,7 @@ diskutil eject /dev/diskN
 
 Insert the card into the DM250 and power on.
 
-1. It boots with its own U-Boot. On the first boot **`/` grows to fill the SD card and a 1 GiB swap partition is made at the end** (used for hibernation). This can take some tens of seconds.
+1. It boots with its own U-Boot. On the first boot **`/` grows to fill the SD card and a 1 GiB swap partition is made at the end** (only for the hibernation image; the everyday swap is a 384 MB compressed-memory zram). This can take some tens of seconds.
 2. A Japanese screen asks for:
    - a user name and password (**there is no shared default password**; only the one you set here works),
    - whether to connect to Wi-Fi (nmtui opens; see "Known issues").
@@ -118,6 +118,7 @@ sudo apt update && sudo apt full-upgrade
 - **Wi-Fi is set up with nmtui.** Move between items with **Tab and the arrow keys**, and press Enter to choose (the screen does not show these keys). Run `nmtui` again to change the setting later.
 - **The DM250 Wi-Fi supports 2.4 GHz only.** 5 GHz access points do not appear.
 - Bluetooth is powered on from the start.
+- **The browser is NetSurf (a light browser).** Firefox is not included. If you install it (`sudo apt install firefox-esr`), one or two pages open, but it is slow (about 50 seconds per page; three pages take about 610 MB) and the 1 GB of memory runs short easily.
 - The SD card and the hibernation image (swap) are not encrypted. If you lose the card, assume its documents can be read.
 - The user is in the `input` group (FDTP reads the keyboard directly), so other programs running as the same user can also read key input.
 - The LocalSend browser receiving in FDTP is not encrypted (use it only on your own Wi-Fi).
